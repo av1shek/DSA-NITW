@@ -1,0 +1,327 @@
+/////////	FIRST QUESTION 	//////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    int elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(int x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    int pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    int peak()
+    {
+        return elements[top];
+    }
+
+};
+
+void sortUsingStacks(int a[], int n)
+{
+    int ele, i, maxx, minn;
+
+    struct Stackk s1(20), s2(20);
+    for(i=0;i<n;i++)
+        s1.push(a[i]);
+
+    i=0;
+    while(i!=n)
+    {
+        maxx = s1.pop();
+        while(s1.top != -1)
+        {
+            minn = s1.pop();
+            if(minn>maxx)
+                swap(minn, maxx);
+            s2.push(minn);
+        }
+        while(s2.top >= i)
+            s1.push(s2.pop());
+
+        s2.push(maxx);
+        i++;
+    }
+
+    i=0;
+    while(s2.top != -1)
+    {
+        a[i]=s2.pop();
+        i++;
+    }
+
+}
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+int main()
+{
+    int a[] = {4,45,51,1,7,3,8,56,6,-1,2,-4};
+    int n = sizeof(a)/sizeof(a[0]);
+    sortUsingStacks(a, n);
+    print(a,n);
+    return 0;
+}
+/////////	SECOND QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+int findScore(int low, int high, string s)
+{
+    if(low>=high)
+        return 0;
+    int openCount=0, closeCount=0, sum=0, start = low+1;
+    for(int i=start;i<high;i++)
+    {
+        if(s[i]=='(')
+            openCount++;
+        else
+            closeCount++;
+        if(openCount==closeCount)
+        {
+            sum += findScore(start, i, s);
+            start = i+1;
+            openCount=0;
+            closeCount=0;
+        }
+    }
+    if(sum)
+        return 2*sum;
+    else
+        return 1;
+}
+int findScore(string s)
+{
+    s = "(" + s + ")";
+    return findScore(0, s.size()-1, s)/2;
+}
+
+int main()
+{
+    cout<<findScore("((()()()))");
+    return 0;
+}
+
+/////////	THIRD QUESTION		///////////
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+int findMaxArea(int a[], int n)
+{
+    int maxxArea = 0;
+
+    int maxArea[n];
+    int maxHeight = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        maxHeight = a[i];
+        maxArea[i] = a[i];
+        for(int j=i;j<n;j++)
+        {
+            maxHeight = min(maxHeight, a[j]);
+            maxArea[i] = max(maxArea[i], maxHeight*(j-i+1));
+        }
+    }
+    maxxArea = maxArea[0];
+    for(int i=0;i<n;i++)
+    {
+        maxxArea = max(maxxArea, maxArea[i]);
+    }
+    return maxxArea;
+}
+int main()
+{
+    int a[] = {2,1,5,6,2,3};
+    int n = sizeof(a)/sizeof(a[0]);
+
+    cout<<findMaxArea(a, n);
+    return 0;
+}
+
+/////////	FOURTH QUESTION		///////////
+#include <bits/stdc++.h>
+using namespace std;
+
+int findMaxArea(int a[], int n)
+{
+    int maxxArea = 0;
+
+    int maxArea[n];
+    int maxHeight = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        maxHeight = a[i];
+        maxArea[i] = a[i];
+        for(int j=i;j<n;j++)
+        {
+            maxHeight = min(maxHeight, a[j]);
+            maxArea[i] = max(maxArea[i], maxHeight*(j-i+1));
+        }
+    }
+    maxxArea = maxArea[0];
+    for(int i=0;i<n;i++)
+    {
+        maxxArea = max(maxxArea, maxArea[i]);
+    }
+    return maxxArea;
+}
+int main()
+{
+    int a[] = {2,1,5,6,2,3};
+    int n = sizeof(a)/sizeof(a[0]);
+
+    cout<<findMaxArea(a, n);
+    return 0;
+}
+
+
+void findMax(int a[], int ans[], int n, int window)
+{
+    int maxx;
+
+    for(int i=0;i<n-window+1;i++)
+    {
+        maxx=a[i];
+        for(int j=i;j<(i+window);j++)
+        {
+            maxx = max(maxx, a[j]);
+        }
+        ans[i]=maxx;
+    }
+    return;
+}
+int main()
+{
+    int a[] = {12,1,43,454,5,7,68,983,42,23};
+    int n = sizeof(a)/sizeof(a[0]);
+
+    int window = 3;
+    int ans[n-window+1];
+
+    findMax(a, ans, n, window);
+    print(ans, n-window+1);
+    return 0;
+}
+
+/////////	FIFTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    int elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(int x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    int pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    int peak()
+    {
+        return elements[top];
+    }
+
+};
+
+void reverse2(struct Stackk &s, int x)
+{
+    if(s.top == -1)
+    {
+        s.push(x);
+        return;
+    }
+    int temp = s.pop();
+    reverse2(s, x);
+    s.push(temp);
+    return;
+}
+
+void reverseStack(struct Stackk &s)
+{
+    if(s.top == -1)
+        return;
+    int temp = s.pop();
+    reverseStack(s);
+    reverse2(s, temp);
+    return;
+}
+
+int main()
+{
+    int n = 10;
+    struct Stackk s(n);
+    cout<<"Filling stack with :"<<endl;
+    for(int i=1;i<=n;i++)
+    {
+        cout<<i<<" ";
+        s.push(i);
+    }
+    cout<<endl;
+    reverseStack(s);
+    while(s.top!= - 1)
+        cout<<s.pop()<<" ";
+
+    return 0;
+}

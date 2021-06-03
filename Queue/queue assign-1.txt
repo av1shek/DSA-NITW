@@ -1,0 +1,335 @@
+/////////	FIRST QUESTION 		//////////////
+#include <iostream>
+using namespace std;
+
+struct queuee
+{
+    int front;
+    int rear;
+    int elements[500];
+    int size;
+
+    queuee()
+    {
+        front = -1;
+        rear = -1;
+        size = 50;
+    }
+    queuee(int n)
+    {
+        front = -1;
+        rear = -1;
+        size = n;
+    }
+    bool isEmpty()
+    {
+        if(front == -1)
+            return true;
+        return false;
+    }
+    bool isFull()
+    {
+        if( (rear+1)%size == front )
+            return true;
+        return false;
+    }
+    void enqueue(int x)
+    {
+        if(isFull())
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear = (rear+1)%size;
+            elements[rear] = x;
+            if(front == -1)
+                front = rear;
+        }
+        return;
+    }
+    int dequeue()
+    {
+        if(isEmpty())
+        {
+            cout<<"Queue is empty"<<endl;
+            return -1;
+        }
+        int data = elements[front];
+        if(front == rear)
+            front = rear = -1;
+        else
+            front = (front+1)%size;
+        return data;
+    }
+    int frontItem()
+    {
+        return elements[front];
+    }
+};
+
+struct StackPopCostly
+{
+    int size;
+    struct queuee *q,*q1;
+    StackPopCostly()
+    {
+        size=20;
+        q = new struct queuee(20);
+        q1 = new struct queuee(20);
+    }
+    StackPopCostly(int n)
+    {
+        size=n;
+        q = new struct queuee(n);
+        q1 = new struct queuee(n);
+    }
+    void push(int x)
+    {
+        q->enqueue(x);
+    }
+    int pop()
+    {
+        int data;
+        while(!q->isEmpty())
+        {
+            data = q->dequeue();
+            if(!q->isEmpty())
+            q1->enqueue(data);
+        }
+
+        swap( q, q1);   /// we can swap because these two are pointers
+        return data;
+    }
+    int peak()
+    {
+                int data;
+        while(!q->isEmpty())
+        {
+            data = q->dequeue();
+            q1->enqueue(data);
+        }
+        swap( q, q1);   /// we can swap because these two are pointers
+        return data;
+    }
+    bool isEmpty()
+    {
+        return q->isEmpty();
+    }
+};
+
+
+struct StackPushCostly
+{
+    int size;
+    struct queuee *q,*q1;
+    StackPushCostly()
+    {
+        size=20;
+        q = new struct queuee(20);
+        q1 = new struct queuee(20);
+    }
+    StackPushCostly(int n)
+    {
+        size=n;
+        q = new struct queuee(n);
+        q1 = new struct queuee(n);
+    }
+    void push(int x)
+    {
+        q1->enqueue(x);
+        int data;
+        while(!q->isEmpty())
+            q1->enqueue(q->dequeue());
+        swap( q, q1);   /// we can swap because these two are pointers
+    }
+    int pop()
+    {
+        return q->dequeue();
+    }
+    int peak()
+    {
+        return q->frontItem();
+    }
+    bool isEmpty()
+    {
+        return q->isEmpty();
+    }
+};
+
+
+int main()
+{
+    int n=10;
+    struct StackPushCostly s1(n);
+    struct StackPopCostly s2(n);
+    for(int i=1;i<=n;i++)
+    {
+        s1.push(i);
+        s2.push(i);
+    }
+    while(!s1.isEmpty())
+        cout<<s1.pop()<<" "<<s2.pop()<<endl;
+
+    return 0;
+}
+
+/////////	SECOND QUESTION 	//////////////
+#include <iostream>
+using namespace std;
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    int elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(int x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    int pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    int peak()
+    {
+        return elements[top];
+    }
+
+};
+
+struct queueeDComplex
+{
+    int size;
+    struct Stackk *s, *s1;
+    queueeDComplex(int x)
+    {
+        size=x;
+        s = new struct Stackk(x);
+        s1 = new struct Stackk(x);
+    }
+
+    void enqueue(int x)
+    {
+        s->push(x);
+    }
+    int dequeue()
+    {
+        int temp;
+        while(s->top != -1)
+        {
+            temp = s->pop();
+            if(s->top != -1)
+            {
+                s1->push(temp);
+            }
+        }
+        while(s1->top != -1)
+            s->push(s1->pop());
+        return temp;
+    }
+    int frontItem()
+    {
+        return s->peak();
+    }
+    bool isEmpty()
+    {
+        return s->top== -1;
+    }
+};
+
+struct queueeEComplex
+{
+    int size;
+    struct Stackk *s, *s1;
+    queueeEComplex(int x)
+    {
+        size=x;
+        s = new struct Stackk(x);
+        s1 = new struct Stackk(x);
+    }
+
+    void enqueue(int x)
+    {
+
+        int temp;
+        while(s->top != -1)
+        {
+            s1->push(s->pop());
+        }
+        s->push(x);
+        while(s1->top != -1)
+            s->push(s1->pop());
+    }
+    int dequeue()
+    {
+        return s->pop();
+    }
+    int frontItem()
+    {
+        int temp;
+        while(s->top != -1)
+        {
+            s1->push(s->pop());
+        }
+        temp = s1->peak();
+        while(s1->top != -1)
+            s->push(s1->pop());
+        return temp;
+    }
+    bool isEmpty()
+    {
+        return s->top== -1;
+    }
+
+};
+int main()
+{
+    struct queueeEComplex q1(10);
+    struct queueeDComplex q2(10);
+
+    for(int i=1;i<10;i++)
+    {
+        q1.enqueue(i);
+        q2.enqueue(i);
+        cout<<"q1.frontItem = "<<q1.frontItem()<<endl;
+        cout<<"q2.frontItem = "<<q2.frontItem()<<endl;
+        cout<<endl;
+    }
+    cout<<endl;
+
+    while(!q1.isEmpty())
+    {
+        cout<<"q1.dequeue() = "<<q1.dequeue()<<endl;
+        cout<<"q2.dequeue() = "<<q2.dequeue()<<endl;
+        cout<<endl;
+    }
+
+
+    return 0;
+}
+
+
+/////////	THIRD QUESTION 		//////////////
+/////////	FOURTH QUESTION 	//////////////

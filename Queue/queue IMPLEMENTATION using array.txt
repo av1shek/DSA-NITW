@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct queuee
+{
+    int front;
+    int rear;
+    int elements[500];
+    int size;
+
+    queuee()
+    {
+        front = -1;
+        rear = -1;
+        size = 50;
+    }
+    queuee(int n)
+    {
+        front = -1;
+        rear = -1;
+        size = n;
+    }
+    bool isEmpty()
+    {
+        if(front == -1)
+            return true;
+        return false;
+    }
+    bool isFull()
+    {
+        if( (rear+1)%size == front )
+            return true;
+        return false;
+    }
+    void enqueue(int x)
+    {
+        if(isFull())
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear = (rear+1)%size;
+            elements[rear] = x;
+            if(front == -1)
+                front = rear;
+        }
+        return;
+    }
+    int dequeue()
+    {
+        if(isEmpty())
+        {
+            cout<<"Queue is empty"<<endl;
+            return -1;
+        }
+        int data = elements[front];
+        if(front == rear)
+            front = rear = -1;
+        else
+            front = (front+1)%size;
+        return data;
+    }
+	
+    int getSize()
+    {
+        if(front==-1)
+            return 0;
+        return (rear - front + size )%size +1;
+    }
+};
+
+int main()
+{
+    struct queuee q(20);
+    for(int i=0;i<10;i++)
+        q.enqueue(i);
+
+    while(!q.isEmpty())
+        cout<<q.dequeue()<<endl;
+    return 0;
+}

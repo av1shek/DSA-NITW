@@ -1,0 +1,330 @@
+///////////////// 	FIRST QUESTION (almost linear time) 		////////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+void linearSort(int a[], int n)
+{
+    map<int, int> mp;
+    for(int i=0;i<n;i++)
+        mp[a[i]]++;
+    int i=0;
+    for(auto it: mp)
+    {
+        for(int j=1;j<=it.second;j++, i++)
+        {
+            a[i] = it.first;
+        }
+    }
+    return;
+}
+
+int main()
+{
+    int a[] = { 4, 2, 40, 10, 10, 1, 4, 2, 1, 10, 40};
+    int n = sizeof(a)/sizeof(a[0]);
+    linearSort(a,n);
+    print(a,n);
+}
+
+
+
+
+////////////	   SECOND QUESTION	////////////
+
+#include<bits/stdc++.h>
+using namespace std;
+
+void func(int a[], int n)
+{
+    int b[n];
+    for(int i=0;i<n;i++)
+        b[i]=a[i];
+    bool flag1=false;
+    bool flag2=false;
+    for(int i=0;i<n;i++)
+    {
+        int j,k;
+        if(!(flag1&&flag2))
+        {
+            for(j=i-1;j>=0;j--)
+            {
+                if(a[j]<a[i])
+                {
+                    flag1=true;
+                    break;
+                }
+            }
+            for(k=i+1;k<n;k++)
+            {
+                if(a[k]>a[i])
+                {
+                    flag2=true;
+                    break;
+                }
+            }
+            if(flag1&&flag2)
+            {
+                cout<<a[j]<<" "<<a[i]<<" "<<a[k]<<endl;
+            }
+        }
+    }
+    return;
+}
+
+int main()
+{
+    int a[] = { 5,4,3,7,6,1,9 } ;
+    int m = sizeof(a)/sizeof(a[0]);
+    func(a, m);
+    return 0;
+}
+
+
+
+
+////////////	   THIRD QUESTION	////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+void func(int a[],  int n)
+{
+    int i=0, j=n-1;
+
+    while(a[i]<a[i+1]) i++;
+    while(a[j]>a[j-1]) j--;
+
+    int left=i;
+    int right=j;
+
+    for(int itr=left;itr<=right; itr++)
+    {
+        while( (i>=0) && (a[i]>a[itr])  ) i--;
+        while( (j<n) && (a[j]<a[itr])) j++;
+    }
+    cout<<"Sort the array from "<< i+1 << " to "<< j-1 <<endl;
+    return;
+}
+
+int main()
+{
+    int a[] = {   12, 1, 2, 3, 4, 5, 6, 7, 8 } ;
+    int m = sizeof(a)/sizeof(a[0]);
+
+    func(a, m);
+    return 0;
+}
+
+////////////	   FOURTH QUESTION	////////////
+
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+void mergeInplace(int a[], int b[], int m, int n)
+{
+    int i,j, temp, itr;
+    for (i = 0; i < m;  i++)
+    {
+        if(a[i]>b[0])
+        {
+            temp=a[i];
+            swap(a[i], b[0]);
+            itr=1;
+
+            while((temp>b[itr])&&(itr<n))
+            {
+                b[itr-1]=b[itr];
+                itr++;
+            }
+            b[itr-1] = temp;
+        }
+    }
+}
+
+int main()
+{
+    int a[] = { 1, 4, 7, 8, 10 };
+    int b[] = { 2, 3, 9 };
+
+    int m = sizeof(a)/sizeof(a[0]);
+    int n = sizeof(b)/sizeof(b[0]);
+
+    mergeInplace(a, b, m, n);
+
+    print(a,m);
+    print(b,n);
+return 0;
+}
+
+
+
+
+
+//////////	FIFTH QUESTION 		///////////
+
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+void myMerge(int a[], int b[], int m, int n)
+{
+    int i=0,j=0, temp[m-n], itr, k=0;
+
+    /// stored the element in extra array
+    for(int i=0;i<m;i++)
+    {
+        if(a[i]!=0)
+        {
+            temp[k]=a[i];
+            k++;
+        }
+    }
+    i=0;j=0;
+    for (k = 0; k < m;  k++)
+    {
+        if(i<(m-n)  && j<n)
+        {
+            if(temp[i]<b[j])
+            {
+                a[k]=temp[i];
+                i++;
+            }
+            else
+            {
+                a[k]=b[j];
+                j++;
+            }
+        }
+        else if(i<(m-n))
+        {
+            a[k]=temp[i];
+            i++;
+        }
+        else
+        {
+            a[k]=b[j];
+            j++;
+        }
+    }
+}
+
+int main()
+{
+    int a[] = { 0, 2, 0, 3,0,5 , 6, 0, 0 } ;
+    int b[] = { 1, 8, 9, 10, 15};
+
+    int m = sizeof(a)/sizeof(a[0]);
+    int n = sizeof(b)/sizeof(b[0]);
+
+    myMerge(a, b, m, n);
+
+    print(a,m);
+    //print(b,n);
+    return 0;
+}
+
+
+
+
+
+/////////////    SIXTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+void func(int a[], int b[], int m, int n)
+{
+    int i=0, j=0;
+    /// sorting the element according to other array
+    for(j=0;j<n;j++)
+    {
+        while(a[i]== b[j]) i++;
+        int itr = i;
+        while(itr<m)
+        {
+            if(a[itr]==b[j])
+            {
+                swap(a[itr], a[i]);
+                i++;
+            }
+            itr++;
+        }
+    }
+
+    /// then sorted the remaining array
+    sort(a+i, a+m);
+    return;
+}
+
+int main()
+{
+    int a[] = { 5, 8, 9, 3, 5, 7, 1, 3, 4, 9, 3, 5, 1, 8, 4 } ;
+    int b[] = { 3, 5, 7, 2 };
+    int m = sizeof(a)/sizeof(a[0]);
+    int n = sizeof(b)/sizeof(b[0]);
+    func(a, b, m, n);
+    print(a, m);
+    return 0;
+}
+
+
+
+
+
+/////////////	 SEVENTH QUESTION	///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+void func(int a[], int n)
+{
+    int i=0, j=n-1;
+    while(a[i]<a[i+1]) i++;
+    while(a[j]>a[j-1]) j--;
+    swap(a[i], a[j]);
+    return;
+}
+
+int main()
+{
+    int a[] = { 3,8,6,7,5,9 } ;
+    int m = sizeof(a)/sizeof(a[0]);
+    func(a, m);
+    print(a, m);
+    return 0;
+}
+
+
+
+

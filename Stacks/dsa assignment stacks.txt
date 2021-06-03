@@ -1,0 +1,883 @@
+/////////	FIRST QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    int elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(int x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    int pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    int peak()
+    {
+        return elements[top];
+    }
+
+};
+
+void printDigit(int num)
+{
+    struct Stackk s(20);
+    while(num>0)
+    {
+        s.push(num%10);
+        num /= 10;
+    }
+    while(s.top!=-1)
+        cout<<s.pop()<<", ";
+    cout<<endl;
+    return;
+}
+
+
+int main()
+{
+    printDigit(45247923);
+    return 0;
+}
+///////////	SECOND QUESTION		/////////////////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    char elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(char x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    char pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    char peak()
+    {
+        return elements[top];
+    }
+
+};
+
+bool checkBalancedParanthesis(string str)
+{
+    struct Stackk s(25);
+    for(int i=0;i<str.size();i++)
+    {
+        if(str[i]=='(')
+            s.push('(');
+        else
+        {
+            if(s.top == -1)
+                return false;
+            else
+                s.pop();
+        }
+    }
+    if(s.top == -1)
+        return true;
+    else
+        return false;
+}
+
+
+int main()
+{
+    cout<< (checkBalancedParanthesis("((()())())") ? "It has balanced paranthesis.\n" : "It has not balanced paranthesis.\n") ;
+    cout<< (checkBalancedParanthesis("((()())()))") ? "It has balanced paranthesis.\n" : "It has not balanced paranthesis.\n") ;
+    return 0;
+}
+/////////////		THIRD QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    float elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(float x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    float pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1.0;
+    }
+
+    float peak()
+    {
+        return elements[top];
+    }
+
+};
+float eval(float oprnd1, float oprnd2, char oprtr)
+{
+    if(oprtr == '+')
+        return oprnd1+oprnd2;
+    else if(oprtr == '-')
+        return oprnd1-oprnd2;
+    else if(oprtr == '*')
+        return oprnd1*oprnd2;
+    else
+        return oprnd1/oprnd2;
+}
+
+float evalPostfix(string inStr)
+{
+    float ans =0;
+    struct Stackk myStack(20);
+    for(int i=0;i<inStr.size();i++)
+    {
+        if(inStr[i]<='9' && inStr[i]>='0')
+            myStack.push(float(inStr[i]-'0')*1.0);
+        else
+        {
+            float oprnd2 = myStack.pop();
+            float oprnd1 = myStack.pop();
+
+            myStack.push(eval(oprnd1, oprnd2, inStr[i]));
+        }
+    }
+
+    return myStack.pop();
+}
+
+int main()
+{
+    cout<< evalPostfix("32+5*64/-")<<endl ;
+    return 0;
+}
+
+/////////////		FOURTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    char elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(char x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    char pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    char peak()
+    {
+        return elements[top];
+    }
+
+    bool hasHigherValue(char ch)
+    {
+        if((top==-1) )
+            return true;
+
+        int topPrecd =0, toComparePrecd=0;
+        if(elements[top]=='*') topPrecd = 4;
+        else if(elements[top]=='/') topPrecd = 3;
+        else if(elements[top]=='+') topPrecd = 2;
+        else topPrecd = 1;
+
+        if(ch=='*') toComparePrecd = 4;
+        else if(ch=='/') toComparePrecd = 3;
+        else if(ch=='+') toComparePrecd = 2;
+        else toComparePrecd = 1;
+
+        return (topPrecd<toComparePrecd);
+    }
+};
+
+string convertToPostfix(string inStr)
+{
+    string outStr = "";
+    struct Stackk myStack(20);
+    for(int i=0;i<inStr.size();i++)
+    {
+        if(inStr[i]<='9' && inStr[i]>='0')
+            outStr += inStr[i];
+        else
+        {
+            if(inStr[i]=='(')
+                myStack.push('(');
+            else if(inStr[i]==')')
+            {
+                while(myStack.peak() != '(')
+                    outStr += myStack.pop();
+
+                myStack.pop();
+            }
+            else
+            {
+                while(! myStack.hasHigherValue(inStr[i]) )
+                    outStr += myStack.pop();
+                myStack.push(inStr[i]);
+            }
+        }
+    }
+    while(myStack.top!=-1)
+         outStr += myStack.pop();
+    return outStr;
+}
+
+int main()
+{
+    cout<< convertToPostfix("(3+2)*5-6/4")<<endl ;
+    return 0;
+}
+
+/////////////		FIFTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size1, size2;
+    int top1, top2;
+    int lowbound1, lowbound2;
+    int elements[500];
+
+    Stackk(int size1, int size2)
+    {
+        lowbound1 = -1;
+        lowbound2 = 500/2;
+        top1 = lowbound1;
+        top2 = lowbound2;
+        this->size1 = size1;
+        this->size2 = size2;
+
+    }
+
+    void push1(int x)
+    {
+        if(top1 != size1 + lowbound1)
+        {
+            top1++;
+            elements[top1] = x;
+        }
+        else
+            cout<<"Stack1 is full\n";
+        return;
+    }
+
+    void push2(int x)
+    {
+        if(top2 != size2 + lowbound2)
+        {
+            top2++;
+            elements[top2] = x;
+        }
+        else
+            cout<<"Stack2 is full\n";
+        return;
+    }
+    int pop1()
+    {
+        if(top1 != lowbound1)
+            return elements[top1--];
+        else
+            cout<<"Stack1 is empty\n";
+        return -1;
+    }
+
+    int pop2()
+    {
+        if(top2 != lowbound2)
+            return elements[top2--];
+        else
+            cout<<"Stack1 is empty\n";
+        return -1;
+    }
+    int peak1()
+    {
+        return elements[top1];
+    }
+
+    int peak2()
+    {
+        return elements[top2];
+    }
+};
+
+int main()
+{
+    struct Stackk s(10, 10);    /// size1, size2
+    s.push1(1); cout<<s.peak1()<<endl;
+    s.push1(3); cout<<s.peak1()<<endl;
+    s.push1(5); cout<<s.peak1()<<endl;
+    s.push1(7); cout<<s.peak1()<<endl;
+
+    cout<<"\nTaking Out from stack1"<<endl;
+    cout<<s.pop1()<<endl;
+    cout<<s.pop1()<<endl;
+    cout<<s.pop1()<<endl;
+    cout<<s.pop1()<<endl;
+    s.pop1();
+
+    cout<<"\nPushing in stack2"<<endl;
+    s.push2(2); cout<<s.peak2()<<endl;
+    s.push2(4); cout<<s.peak2()<<endl;
+    s.push2(6); cout<<s.peak2()<<endl;
+    s.push2(8); cout<<s.peak2()<<endl;
+
+    cout<<"\nTaking Out from stack1"<<endl;
+    cout<<s.pop2()<<endl;
+    cout<<s.pop2()<<endl;
+    cout<<s.pop2()<<endl;
+    cout<<s.pop2()<<endl;
+    s.pop2();
+
+    return 0;
+}
+
+/////////////		SIXTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+union data{
+    int in;
+    char ch;
+    float fl;
+    bool boo;
+    //string str;
+};
+
+struct Nodee{
+    int tag;
+    union data element;
+};
+
+struct Stackk{
+
+    int size;
+    int top;
+    struct Nodee elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(struct Nodee x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    struct Nodee pop()
+    {
+        struct Nodee temp;
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return temp;
+    }
+
+    struct Nodee peak()
+    {
+        return elements[top];
+    }
+
+};
+
+struct Nodee input()
+{
+    struct Nodee x;
+    cout<<"Enter tag and data seperated by space( 1-int, 2-char, 3-float, 4-bool)"<<endl;
+    cin>> x.tag;
+    switch(x.tag)
+    {
+    case 1:
+        int temp; cin>>temp; x.element.in=temp;
+        break;
+    case 2:
+        char temp2; cin>>temp2; x.element.ch=temp2;
+        break;
+    case 3:
+        float temp3; cin>>temp3; x.element.fl = temp3;
+        break;
+    case 4:
+        bool temp4; cin>>temp4; x.element.boo = temp4;
+        break;
+    }
+    return x;
+};
+void print(struct Nodee x)
+{
+    switch(x.tag)
+    {
+    case 1:
+        cout<<x.element.in<<endl;
+        break;
+    case 2:
+        cout<<x.element.ch<<endl;
+        break;
+    case 3:
+        cout<<x.element.fl<<endl;
+        break;
+    case 4:
+        cout<<x.element.boo<<endl;
+        break;
+    }
+}
+int main()
+{
+    struct Stackk s(10);
+    struct Nodee x;
+
+    x= input();
+    s.push(x);
+
+    x=s.pop();
+    print(x);
+
+    return 0;
+}
+
+/////////////		SEVENTH QUESTION	///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    int elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(int x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    int pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    int peak()
+    {
+        return elements[top];
+    }
+
+};
+
+
+int main()
+{
+
+    int n, ele, i, maxx, minn;      /// 5 variables
+
+    cout<<"Enter the size of array"<<endl;
+    cin>>n;
+    struct Stackk s1(n), s2(n);         /// 2 stacks
+    for(i=0;i<n;i++)
+    {
+        cin>>ele;
+        s1.push(ele);
+    }
+
+    i=0;
+    while(i!=n)
+    {
+        maxx = s1.pop();
+        while(s1.top != -1)
+        {
+            minn = s1.pop();
+            if(minn>maxx)
+                swap(minn, maxx);
+            s2.push(minn);
+        }
+        while(s2.top >= i)
+            s1.push(s2.pop());
+
+        s2.push(maxx);
+        i++;
+    }
+
+    cout<<"Printing sorted array : ";
+    while(s2.top != -1)
+        cout<<s2.pop()<<" ";
+    return 0;
+}
+
+/////////////		EIGTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    float elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(float x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full, top val = "<<top<<"\n";
+        return;
+    }
+
+    float pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1.0;
+    }
+
+    float peak()
+    {
+        return elements[top];
+    }
+
+};
+float eval(float oprnd1, float oprnd2, char oprtr)
+{
+    if(oprtr == '+')
+        return oprnd1+oprnd2;
+    else if(oprtr == '-')
+        return oprnd1-oprnd2;
+    else if(oprtr == '*')
+        return oprnd1*oprnd2;
+    else
+        return oprnd1/oprnd2;
+}
+
+bool isOperator(string ch)
+{
+    if(ch=="+" || ch=="-" || ch=="*" || ch=="/")
+        return true;
+    else
+        return false;
+}
+float mulDigitPostfixEval(string inStr)
+{
+    float oprnd2, oprnd1, oprnd;
+    char oprtr;
+    string elements;
+    stringstream strTok1(inStr);
+
+    struct Stackk myStack(20);
+    while(strTok1>>elements)
+    {
+        if(isOperator(elements))
+        {
+            oprtr = elements[0];
+            oprnd2 = myStack.pop();
+            oprnd1 = myStack.pop();
+            myStack.push(eval(oprnd1, oprnd2, oprtr));
+        }
+        else
+        {
+            stringstream convertToInt(elements);
+            convertToInt>>oprnd;
+            myStack.push(oprnd*1.0);
+        }
+    }
+    return myStack.pop();
+}
+
+int main()
+{
+    cout<<mulDigitPostfixEval("11 12 * 15 2 / +")<<endl ;
+    return 0;
+}
+
+/////////////		NINTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    char elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(char x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    char pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    char peak()
+    {
+        return elements[top];
+    }
+
+};
+
+char findPair(char ch)
+{
+    if( ch == ')')
+        return '(';
+    else if( ch == '}')
+        return '{';
+    else
+        return '[';
+}
+bool checkBalancedParanthesis(string str)
+{
+    struct Stackk s(25);
+    for(int i=0;i<str.size();i++)
+    {
+        if(str[i]=='(' || str[i]=='{' || str[i]=='[')
+            s.push(str[i]);
+        else if(str[i]==')' || str[i]=='}' || str[i]==']')
+        {
+            if(s.top == -1 || (findPair(str[i])!= s.peak()))
+                return false;
+            else
+                s.pop();
+        }
+    }
+    if(s.top == -1)
+        return true;
+    else
+        return false;
+}
+
+
+
+int main()
+{
+    cout<< (checkBalancedParanthesis("([)]") ? "It has balanced paranthesis.\n" : "It has not balanced paranthesis.\n") ;
+    cout<< (checkBalancedParanthesis("([])") ? "It has balanced paranthesis.\n" : "It has not balanced paranthesis.\n") ;
+    return 0;
+}
+
+
+/////////////		TENTH QUESTION		///////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int *top;
+    int *lowbound;
+    int elements[500];
+
+    Stackk(int k, int size)
+    {
+        top = new int[k];
+        lowbound = new int[k];
+
+        for(int i=0;i<k;i++)
+        {
+            lowbound[i] = (i*500)/k;
+            top[i] = lowbound[i];
+        }
+    }
+
+    void push(int i, int x)
+    {
+        if(top[i] != size + lowbound[i])
+        {
+            top[i]++;
+            elements[top[i]] = x;
+        }
+        else
+            cout<<"Stack"<<i<<" is full\n";
+        return;
+    }
+
+    int pop(int i)
+    {
+        if(top[i] != lowbound[i])
+            return elements[top[i]--];
+        else
+            cout<<"Stack"<<i<<" is empty\n";
+        return -1;
+    }
+
+    int peak(int i)
+    {
+        return elements[top[i]];
+    }
+    bool isEmpty(int i)
+    {
+        if(top[i]!= lowbound[i])
+            return false;
+        else
+            return true;
+    }
+};
+
+
+int main()
+{
+    int k=8;
+    struct Stackk s(k, 10);
+
+    /// in all member function first arg should be
+    /// index of stack which user wants to access
+    /// and second arg if required is as normal.
+    s.push(0, 2);
+    s.push(0, 4);       /// pushing stack at index 0
+    s.push(0, 6);
+    s.push(0, 8);
+
+    while(!s.isEmpty(0))
+        cout<<s.pop(0)<<" ";
+    cout<<endl;
+
+    s.push(4, 1);
+    s.push(4, 3);       /// pushing stack at index 4
+    s.push(4, 5);
+    s.push(4, 7);
+
+    while(!s.isEmpty(4))
+        cout<<s.pop(4)<<" ";
+    cout<<endl;
+
+    s.pop(2);            /// popping from stack at index 2 which is empty
+    return 0;
+}
+

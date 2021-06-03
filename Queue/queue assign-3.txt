@@ -1,0 +1,338 @@
+//////		FIRST QUESTION		//////////////
+#include <bits/stdc++.h>
+using namespace std;
+
+struct queuee
+{
+    int *front;
+    int *rear;
+    int elements[500];
+    int *initialState;
+    int size;
+
+    queuee(int k, int n)
+    {
+        front = new int[k];
+        rear = new int[k];
+        initialState = new int[k];
+        size = n;
+
+        int firstInitialState = -1;
+        for(int i=0;i<k;i++, firstInitialState+=size)
+        {
+            initialState[i] = firstInitialState;
+            front[i] = initialState[i];
+            rear[i] = initialState[i];
+        }
+    }
+    bool isEmpty(int k)
+    {
+        if(front[k] == initialState[k])
+            return true;
+        return false;
+    }
+    bool isFull(int k)
+    {
+        if( ( rear[k]- (initialState[k]+1) + 1)%size == (front[k] - (initialState[k]+1)) )
+            return true;
+        return false;
+    }
+    void enqueue(int k, int x)
+    {
+        if(isFull(k))
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear[k] = initialState[k] + 1 + (rear[k] - initialState[k])%size;
+            elements[rear[k]] = x;
+            if(front[k] == initialState[k])
+                front[k] = rear[k];
+        }
+        return;
+    }
+    int dequeue(int k)
+    {
+        if(isEmpty(k))
+        {
+            cout<<"Queue " <<k << " is empty"<<endl;
+            return -1;
+        }
+        int data = elements[front[k]];
+        if(front[k] == rear[k])
+            front[k] = rear[k] = initialState[k];
+        else
+            front[k] = initialState[k] + 1 + (front[k] - initialState[k])%size;
+        return data;
+    }
+    int getSize(int k)
+    {
+        if(front[k]==initialState[k])
+            return 0;
+        return (rear[k] - front[k] + size )%size +1;
+    }
+    int frontItem(int k)
+    {
+        if(isEmpty(k))
+        {
+            cout<<"this queue is empty ";
+            return -1;
+        }
+        return elements[front[k]];
+    }
+};
+
+int main()
+{
+    int n=5, k=5;
+    struct queuee q(n, k);
+
+    /// pushing in first queue
+    q.enqueue(0, 21);
+    q.enqueue(0, 22);
+    q.enqueue(0, 23);
+    q.enqueue(0, 24);
+    q.enqueue(0, 25);
+    /// pushing in second queue
+    q.enqueue(1, 31);
+    q.enqueue(1, 32);
+    q.enqueue(1, 33);
+    q.enqueue(1, 34);
+    q.enqueue(1, 35);
+    q.enqueue(1, 36);
+
+    while(!q.isEmpty(0))
+        cout<<q.dequeue(0)<<" ";
+    cout<<endl;
+
+    while(!q.isEmpty(1))
+        cout<<q.dequeue(1)<<" ";
+    cout<<endl;
+
+    return 0;
+}
+
+//////		SECOND QUESTION		//////////////
+#include <bits/stdc++.h>
+using namespace std;
+
+struct queuee
+{
+    int front;
+    int rear;
+    int elements[500];
+    int size;
+
+    queuee()
+    {
+        front = -1;
+        rear = -1;
+        size = 50;
+    }
+    queuee(int n)
+    {
+        front = -1;
+        rear = -1;
+        size = n;
+    }
+    bool isEmpty()
+    {
+        if(front == -1)
+            return true;
+        return false;
+    }
+    bool isFull()
+    {
+        if( (rear+1)%size == front )
+            return true;
+        return false;
+    }
+    void enqueue(int x)
+    {
+        if(isFull())
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear = (rear+1)%size;
+            elements[rear] = x;
+            if(front == -1)
+                front = rear;
+        }
+        return;
+    }
+    int dequeue()
+    {
+        if(isEmpty())
+        {
+            cout<<"Queue is empty"<<endl;
+            return -1;
+        }
+        int data = elements[front];
+        if(front == rear)
+            front = rear = -1;
+        else
+            front = (front+1)%size;
+        return data;
+    }
+    int getSize()
+    {
+        if(front==-1)
+            return 0;
+        return (rear - front + size )%size +1;
+    }
+};
+
+int main()
+{
+    int n, tempC, i, maxx, minn;      /// 5 variables
+    cout<<"Enter the size of array"<<endl;
+    cin>>n;
+    struct queuee q(n);             /// 1 queue
+    for(i=0;i<n;i++)
+    {
+        cin>>tempC;
+        q.enqueue(tempC);
+    }
+
+    i = tempC = 0;
+    while(i!=n)
+    {
+        minn = q.dequeue();
+        while(tempC<n-1-i)
+        {
+            maxx = q.dequeue();
+            if(minn>maxx)
+                swap(minn, maxx);
+            q.enqueue(maxx);
+            tempC++;
+        }
+        while(tempC<n-1)
+        {
+            q.enqueue(q.dequeue());
+            tempC++;
+        }
+        q.enqueue(minn);
+        i++;
+        tempC = 0;
+    }
+
+    cout<<"Printing sorted array : ";
+    while(!q.isEmpty())
+        cout<<q.dequeue()<<" ";
+    return 0;
+}
+
+//////		THIRD QUESTION		//////////////
+#include <bits/stdc++.h>
+using namespace std;
+
+union U
+{
+    int integer;
+    char character;
+    float floatNum;
+};
+struct node
+{
+    union U data;
+    int tag;
+};
+struct queuee
+{
+    int front;
+    int rear;
+    struct node elements[500];
+    int size;
+
+    queuee()
+    {
+        front = -1;
+        rear = -1;
+        size = 50;
+    }
+    queuee(int n)
+    {
+        front = -1;
+        rear = -1;
+        size = n;
+    }
+    bool isEmpty()
+    {
+        if(front == -1)
+            return true;
+        return false;
+    }
+    bool isFull()
+    {
+        if( (rear+1)%size == front )
+            return true;
+        return false;
+    }
+    void enqueue(struct node x)
+    {
+        if(isFull())
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear = (rear+1)%size;
+            elements[rear] = x;
+            if(front == -1)
+                front = rear;
+        }
+        return;
+    }
+    struct node dequeue()
+    {
+        struct node temp;
+        if(isEmpty())
+        {
+            cout<<"Queue is empty"<<endl;
+            return temp;
+        }
+        struct node data = elements[front];
+        if(front == rear)
+            front = rear = -1;
+        else
+            front = (front+1)%size;
+        return data;
+    }
+};
+
+void input(struct queuee &q, int n)
+{
+    struct node temp;
+    for(int i=0;i<n;i++)
+    {
+        cin>>temp.tag;
+        if(temp.tag==1)
+            cin>>temp.data.integer;
+        else if(temp.tag==2)
+            cin>>temp.data.character;
+        else
+            cin>>temp.data.floatNum;
+        q.enqueue(temp);
+    }
+}
+
+void output(struct queuee &q)
+{
+    struct node temp;
+    while(!q.isEmpty())
+    {
+        temp = q.dequeue();
+        if(temp.tag==1)
+            cout<<temp.data.integer<<endl;
+        else if(temp.tag==2)
+            cout<<temp.data.character<<endl;
+        else
+            cout<<temp.data.floatNum<<endl;
+    }
+}
+int main()
+{
+    struct queuee q(20);
+    int n= 5;
+    cout<<"Enter "<<n<<" tag and values seperated by space( 1 int, 2 char, 3 float)"<<endl;
+    input(q, n);
+    output(q);
+    return 0;
+}

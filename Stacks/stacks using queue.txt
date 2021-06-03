@@ -1,0 +1,157 @@
+#include <iostream>
+using namespace std;
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    int elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(int x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    int pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    int peak()
+    {
+        return elements[top];
+    }
+
+};
+
+struct queueeDComplex
+{
+    int size;
+    struct Stackk *s, *s1;
+    queueeDComplex(int x)
+    {
+        size=x;
+        s = new struct Stackk(x);
+        s1 = new struct Stackk(x);
+    }
+
+    void enqueue(int x)
+    {
+        s->push(x);
+    }
+    int dequeue()
+    {
+        int temp;
+        while(s->top != -1)
+        {
+            temp = s->pop();
+            if(s->top != -1)
+            {
+                s1->push(temp);
+            }
+        }
+        while(s1->top != -1)
+            s->push(s1->pop());
+        return temp;
+    }
+    int frontItem()
+    {
+        return s->peak();
+    }
+    bool isEmpty()
+    {
+        return s->top== -1;
+    }
+};
+
+struct queueeEComplex
+{
+    int size;
+    struct Stackk *s, *s1;
+    queueeEComplex(int x)
+    {
+        size=x;
+        s = new struct Stackk(x);
+        s1 = new struct Stackk(x);
+    }
+
+    void enqueue(int x)
+    {
+
+        int temp;
+        while(s->top != -1)
+        {
+            s1->push(s->pop());
+        }
+        s->push(x);
+        while(s1->top != -1)
+            s->push(s1->pop());
+    }
+    int dequeue()
+    {
+        return s->pop();
+    }
+    int frontItem()
+    {
+        int temp;
+        while(s->top != -1)
+        {
+            s1->push(s->pop());
+        }
+        temp = s1->peak();
+        while(s1->top != -1)
+            s->push(s1->pop());
+        return temp;
+    }
+    bool isEmpty()
+    {
+        return s->top== -1;
+    }
+
+};
+int main()
+{
+    struct queueeEComplex q1(10);
+    struct queueeDComplex q2(10);
+
+    for(int i=1;i<10;i++)
+    {
+        q1.enqueue(i);
+        q2.enqueue(i);
+        cout<<"q1.frontItem = "<<q1.frontItem()<<endl;
+        cout<<"q2.frontItem = "<<q2.frontItem()<<endl;
+        cout<<endl;
+    }
+    cout<<endl;
+
+    while(!q1.isEmpty())
+    {
+        cout<<"q1.dequeue() = "<<q1.dequeue()<<endl;
+        cout<<"q2.dequeue() = "<<q2.dequeue()<<endl;
+        cout<<endl;
+    }
+
+
+    return 0;
+}
+

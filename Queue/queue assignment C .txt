@@ -1,0 +1,356 @@
+///////		FIRST QUESTION 		/////////
+#include <bits/stdc++.h>
+using namespace std;
+
+struct queuee
+{
+    int front;
+    int rear;
+    int elements[500];
+    int size;
+
+    queuee()
+    {
+        front = -1;
+        rear = -1;
+        size = 50;
+    }
+    queuee(int n)
+    {
+        front = -1;
+        rear = -1;
+        size = n;
+    }
+    bool isEmpty()
+    {
+        if(front == -1)
+            return true;
+        return false;
+    }
+    bool isFull()
+    {
+        if( (rear+1)%size == front )
+            return true;
+        return false;
+    }
+    void enqueue(int x)
+    {
+        if(isFull())
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear = (rear+1)%size;
+            elements[rear] = x;
+            if(front == -1)
+                front = rear;
+        }
+        return;
+    }
+    int dequeue()
+    {
+        if(isEmpty())
+        {
+            cout<<"Queue is empty"<<endl;
+            return -1;
+        }
+        int data = elements[front];
+        if(front == rear)
+            front = rear = -1;
+        else
+            front = (front+1)%size;
+        return data;
+    }
+    int frontItem()
+    {
+        return elements[front];
+    }
+};
+
+void rearrange(struct queuee &q, int n)
+{
+    stack<int> s;
+
+    for(int i=0; i<n; i++)
+    {
+        s.push(q.frontItem());
+        for(int j=0; j<n; j++)
+            q.enqueue(q.dequeue());
+        s.push(q.frontItem());
+        q.enqueue(q.dequeue());
+        for(int j=0; j<n; j++)
+            q.enqueue(q.dequeue());
+    }
+
+    while(!q.isEmpty())
+        q.dequeue();
+    while(!s.empty())
+    {
+        q.enqueue(s.top());
+        s.pop();
+    }
+    while(!q.isEmpty())
+        s.push(q.dequeue());
+    while(!s.empty())
+    {
+        q.enqueue(s.top());
+        s.pop();
+    }
+}
+int main()
+{
+    int a[] = {11,  12,  13,  14,  15,  16,  17,  18,  19,  20};
+    int n = sizeof(a)/sizeof(a[0]);
+
+    struct queuee q(n);
+    for(int i=0; i<n; i++)
+        q.enqueue(a[i]);
+    rearrange(q,  n/2);
+    /// print
+    while(!q.isEmpty())
+        cout<<q.dequeue()<<" ";
+    return 0;
+}
+
+///////		SECOND QUESTION 	/////////
+#include <bits/stdc++.h>
+using namespace std;
+
+void printPermut(string s,int l,int r)
+{
+    if(l==r-1)
+    {
+        cout<<s<<endl;
+        swap(s[r],s[l]);
+        cout<<s<<endl;
+        swap(s[r],s[l]);
+        return;
+    }
+
+
+    for(int i=l; i<=r; i++)
+    {
+        swap(s[l],s[i]);
+        printPermut(s,l+1,r);
+        swap(s[l],s[i]);
+    }
+    return;
+}
+
+
+int main()
+{
+    string s = "ABCD";
+    printPermut(s, 0, s.size()-1);
+    return 0;
+}
+
+///////		THIRD QUESTION 		/////////
+#include <bits/stdc++.h>
+using namespace std;
+
+struct queuee
+{
+    int front;
+    int rear;
+    string elements[500];
+    int size;
+
+    queuee()
+    {
+        front = -1;
+        rear = -1;
+        size = 50;
+    }
+    queuee(int n)
+    {
+        front = -1;
+        rear = -1;
+        size = n;
+    }
+    bool isEmpty()
+    {
+        if(front == -1)
+            return true;
+        return false;
+    }
+    bool isFull()
+    {
+        if( (rear+1)%size == front )
+            return true;
+        return false;
+    }
+    void enqueue(string x)
+    {
+        if(isFull())
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear = (rear+1)%size;
+            elements[rear] = x;
+            if(front == -1)
+                front = rear;
+        }
+        return;
+    }
+    string dequeue()
+    {
+        if(isEmpty())
+        {
+            cout<<"Queue is empty"<<endl;
+            return "";
+        }
+        string data = elements[front];
+        if(front == rear)
+            front = rear = -1;
+        else
+            front = (front+1)%size;
+        return data;
+    }
+};
+
+void printFirstNBinaryNum(struct queuee &q, int n, int i)
+{
+    if(i<=n)
+    {
+        string data = q.dequeue();
+        cout<<data<<" ";
+        if(!q.isFull())
+            q.enqueue(data + "0");
+        if(!q.isFull())
+            q.enqueue(data + "1");
+        printFirstNBinaryNum(q, n, i+1);
+    }
+}
+
+int main()
+{
+    int n=11;
+    struct queuee q(n);
+    q.enqueue("1");
+    printFirstNBinaryNum(q, n, 1);
+    return 0;
+}
+
+///////		FOURTH QUESTION 	/////////
+#include <bits/stdc++.h>
+using namespace std;
+
+struct queuee
+{
+    int front;
+    int rear;
+    int elements[500];
+    int size;
+
+    queuee()
+    {
+        front = -1;
+        rear = -1;
+        size = 50;
+    }
+    queuee(int n)
+    {
+        front = -1;
+        rear = -1;
+        size = n;
+    }
+    bool isEmpty()
+    {
+        if(front == -1)
+            return true;
+        return false;
+    }
+    bool isFull()
+    {
+        if( (rear+1)%size == front )
+            return true;
+        return false;
+    }
+    void enqueue(int x)
+    {
+        if(isFull())
+            cout<<"Queue is full"<<endl;
+        else
+        {
+            rear = (rear+1)%size;
+            elements[rear] = x;
+            if(front == -1)
+                front = rear;
+        }
+        return;
+    }
+    int dequeue()
+    {
+        if(isEmpty())
+        {
+            cout<<"Queue is empty"<<endl;
+            return -1;
+        }
+        int data = elements[front];
+        if(front == rear)
+            front = rear = -1;
+        else
+            front = (front+1)%size;
+        return data;
+    }
+    int frontItem()
+    {
+        return elements[front];
+    }
+    int getSize()
+    {
+        if(front==-1)
+            return 0;
+        else
+            return (rear - front + size )%size +1;
+    }
+};
+
+void insertInFirst(struct queuee &q, int y, int size)
+{
+    q.enqueue(y);
+    while(size--)
+        q.enqueue(q.dequeue());
+}
+void insertInqueue(struct queuee &q, int y, int size)
+{
+    if(q.isEmpty()||size==0)
+    {
+        q.enqueue(y);
+        return;
+    }
+    else if(y<=q.frontItem())
+        insertInFirst(q, y, q.getSize());
+    else
+    {
+        int minElement = q.frontItem();
+        while((y>q.frontItem())&&(size--))
+            q.enqueue(q.dequeue());
+        insertInFirst(q, y, q.getSize());
+        while(q.frontItem()!= minElement)
+            q.enqueue(q.dequeue());
+    }
+}
+void sortt(struct queuee &q)
+{
+    if(q.isEmpty())
+        return;
+    int y = q.dequeue();
+    sortt(q);
+    insertInqueue(q, y, q.getSize());
+}
+int main()
+{
+    int a[] = {9,8,17,-6,5,4,3,2,1};
+    int n = sizeof(a)/sizeof(a[0]);
+
+    struct queuee q(n);
+    for(int i=0; i<n; i++)
+        q.enqueue(a[i]);
+
+    sortt(q);
+
+    while(!q.isEmpty())
+        cout<<q.dequeue()<<" ";
+    return 0;
+}

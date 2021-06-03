@@ -1,0 +1,431 @@
+//////// 	FIRST QUESTION		/////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+union U{
+    float in;
+    char ch;
+};
+
+struct Stackk{
+
+    int size;
+    int top;
+    union U elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(union U x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    union U pop()
+    {
+        union U temp;
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return temp;
+    }
+
+    union U peak()
+    {
+        return elements[top];
+    }
+
+    bool hasHigherValue(char oprtr)
+    {
+        if((top==-1) )
+            return true;
+
+        int topPrecd =0, toComparePrecd=0;
+        if(elements[top].ch=='*') topPrecd = 4;
+        else if(elements[top].ch=='/') topPrecd = 3;
+        else if(elements[top].ch=='+') topPrecd = 2;
+        else topPrecd = 1;
+
+        if(oprtr=='*') toComparePrecd = 4;
+        else if(oprtr=='/') toComparePrecd = 3;
+        else if(oprtr=='+') toComparePrecd = 2;
+        else toComparePrecd = 1;
+
+        return (topPrecd<toComparePrecd);
+    }
+};
+float eval(float oprnd1, float oprnd2, char oprtr)
+{
+    if(oprtr == '+')
+        return oprnd1+oprnd2;
+    else if(oprtr == '-')
+        return oprnd1-oprnd2;
+    else if(oprtr == '*')
+        return oprnd1*oprnd2;
+    else
+        return oprnd1/oprnd2;
+}
+
+
+float evalInfixUsingOneStack(string inStr)
+{
+    /// first converted infix expression to postifx and stored in outStr
+    /// then reused the same stack(generic stack) to evaluate Postfix
+
+    string outStr = "";
+    struct Stackk myStack(20);      /// only one stack used
+    union U temp;
+    for(int i=0;i<inStr.size();i++)
+    {
+        if(inStr[i]<='9' && inStr[i]>='0')
+            outStr += inStr[i];
+        else
+        {
+            if(inStr[i]=='(')
+            {
+                temp.ch = '(';
+                myStack.push(temp);
+            }
+            else if(inStr[i]==')')
+            {
+                while(myStack.peak().ch != '(')
+                    outStr += myStack.pop().ch;
+
+                myStack.pop();
+            }
+            else
+            {
+                while(! myStack.hasHigherValue(inStr[i]) )
+                    outStr += myStack.pop().ch;
+                temp.ch = inStr[i];
+                myStack.push(temp);
+            }
+        }
+    }
+    while(myStack.top!=-1)
+         outStr += myStack.pop().ch;
+
+    float ans =0;
+    for(int i=0;i<outStr.size();i++)
+    {
+        if(outStr[i]<='9' && outStr[i]>='0')
+        {
+            temp.in = float(outStr[i]-'0')*1.0;
+            myStack.push(temp);
+        }
+        else
+        {
+            float oprnd2 = myStack.pop().in;
+            float oprnd1 = myStack.pop().in;
+            temp.in = eval(oprnd1, oprnd2, outStr[i]);
+            myStack.push(temp);
+        }
+    }
+    return myStack.pop().in;
+}
+
+int main()
+{
+    cout<<evalInfixUsingOneStack("3+5*3/2");
+    return 0;
+}
+
+
+//////// 	SECOND QUESTION		/////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct node{
+    int low;
+    int high;
+};
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+struct Stackk{
+
+    int size;
+    int top;
+    struct node elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(struct node x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    struct node pop()
+    {
+        struct node temp;
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return temp;
+    }
+
+    struct node peak()
+    {
+        return elements[top];
+    }
+
+};
+
+int partion(int a[], int low, int high)
+{
+    if(low>=high)
+        return -1;
+    int start = low;
+    int end = high;
+    int pivot = a[low];
+
+    while(start<end)
+    {
+        while(a[start]<=pivot)   start++;
+        while(a[end]>pivot)     end--;
+
+        if(start<end)
+            swap(a[start], a[end]);
+    }
+    swap(a[low], a[end]);
+    return end;
+}
+
+
+void iterativeQuicSort(int a[], int n)
+{
+    struct Stackk s(30);
+    struct node temp;
+    temp.low=0;
+    temp.high=n-1;
+
+    s.push(temp);
+    int pivot = 0;
+    while(s.top!=-1)
+    {
+        temp = s.pop();
+        pivot = partion(a, temp.low, temp.high);
+        if(pivot != -1)
+        {
+            struct node temp2, temp3;
+            temp2.low = temp.low;
+            temp2.high = pivot-1;
+
+            temp3.low = pivot+1;
+            temp3.high = temp.high;
+
+            s.push(temp2);
+            s.push(temp3);
+        }
+
+    }
+
+}
+
+int main()
+{
+    int a[] = {4,5,7,8,14,78, -12, 43};
+    int n= sizeof(a)/sizeof(a[0]);
+    iterativeQuicSort(a, n);
+    print(a, n);
+    return 0;
+}
+
+//////// 	THIRD QUESTION		/////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    char elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(char x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    char pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return -1;
+    }
+
+    char peak()
+    {
+        return elements[top];
+    }
+
+};
+
+void countReversalsRequired(string str)
+{
+    struct Stackk s(25);
+    int openCount=0;
+    int toReverse = 0;
+
+    for(int i=0;i<str.size();i++)
+    {
+        if(str[i]=='(')
+        {
+            s.push('(');
+            openCount++;
+        }
+        else
+        {
+            if(s.top == -1)
+            {
+                toReverse++;
+                openCount++;
+                s.push('(');
+            }
+            else
+            {
+                openCount--;
+                s.pop();
+            }
+        }
+    }
+    if(openCount%2==0)
+        cout<<(toReverse + openCount/2)<<endl;
+    else
+    {
+        cout<<"Not Possible"<<endl;
+    }
+
+}
+
+
+int main()
+{
+    countReversalsRequired("))((");
+    countReversalsRequired("((()())())");
+    countReversalsRequired("((()())()(((");
+    return 0;
+}
+
+//////// 	FOURTH QUESTION		/////////////
+
+//////// 	FIFTH QUESTION		/////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Stackk{
+
+    int size;
+    int top;
+    string elements[50];
+
+    Stackk(int size)
+    {
+        top = -1;
+        this->size = size;
+    }
+
+    void push(string x)
+    {
+        if(top != size-1)
+        {
+            top++;
+            elements[top] = x;
+        }
+        else
+            cout<<"Stackk is full\n";
+        return;
+    }
+
+    string pop()
+    {
+        if(top != -1)
+            return elements[top--];
+        else
+            cout<<"Stackk is empty\n";
+        return "";
+    }
+
+    string peak()
+    {
+        return elements[top];
+    }
+
+};
+
+bool isOperator(string ch)
+{
+    if(ch=="+" || ch=="*" || ch=="-" || ch=="/" )
+        return true;
+    else
+        return false;
+}
+string prefixToPostfix(string preStr, int n, struct Stackk &s)
+{
+    if(n<0)
+        return s.pop();
+    string temp;
+    temp+=preStr[n];
+    if(isOperator(temp))
+    {
+        string oprtr1 = s.pop();
+        string oprtr2 = s.pop();
+        string temp = oprtr1 + oprtr2 + preStr[n];
+        s.push(temp);
+    }
+    else
+    {
+        string temp = "";
+        temp += preStr[n];
+        s.push(temp);
+    }
+    return prefixToPostfix(preStr, n-1, s);
+}
+int main()
+{
+    string prefixStr = "+3*52";
+    struct Stackk s(20);
+    cout<< prefixToPostfix(prefixStr, prefixStr.size()-1, s )<<endl ;
+    return 0;
+}
+

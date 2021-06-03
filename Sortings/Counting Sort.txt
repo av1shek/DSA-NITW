@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+void countSort(int a[], int n)
+{
+    int maxx = a[0];
+    for(int i=0;i<n;i++)
+        maxx= max(a[i],maxx);
+
+    int freq[maxx+1];
+    memset(freq, 0, sizeof(freq));
+
+    for(int i=0;i<n;i++)
+        freq[a[i]]++;
+
+    for(int i=1;i<(maxx+1);i++)
+        freq[i] =(freq[i] + freq[i-1]);
+
+    int temp[n];
+
+    for(int i=0;i<n;i++)
+    {
+        temp[freq[a[i]]-1]=a[i];
+        freq[a[i]]--;
+    }
+    for(int i=0;i<n;i++)
+        a[i]=temp[i];
+    return;
+}
+int main()
+{
+    int a[]= {2,5,6,23,10,3,6,7,8};
+    int n = sizeof(a)/sizeof(a[0]);
+
+    countSort(a, n);
+    print(a, n);
+
+
+    return 0;
+}
+

@@ -1,0 +1,174 @@
+#include<bits/stdc++.h>
+using namespace std;
+int fibb[50];
+
+void init()
+{
+    fibb[0] = 0;
+    fibb[1] = 1;
+    for(int i=2;i<50;i++)
+        fibb[i] = fibb[i-1]+fibb[i-2];
+}
+int toDecimal(int n)
+{
+    int i=1;
+    int sum=0;
+    while(n!=0)
+    {
+        sum += fibb[i]*(n%10);
+        n /= 10;
+        i++;
+    }
+    return sum;
+}
+string toFitString(int n, int sum, int pos, string ans)
+{
+    if(pos==50)
+        return "Not Possible"; /// if it contains more than 50 fits
+    if(sum==n)
+        return ans;
+    if(sum<n)
+    {
+        string s1 = toFitString(n, sum + fibb[pos], pos+1, "1"+ans);
+        string s2 = toFitString(n, sum , pos+1, "0"+ans);
+
+        if(s1 != "Not Possible")
+            return s1;
+        else if(s2 != "Not Possible")
+            return s2;
+    }
+    return "Not Possible";
+}
+string increment(int n)
+{
+    n = toDecimal(n);
+    string ans = "";
+    return toFitString(n+1, 0, 1, ans);
+}
+
+string decrement(int n)
+{
+    n = toDecimal(n);
+    string ans = "";
+    return toFitString(n-1, 0, 1, ans);
+}
+int main()
+{
+    int n;
+    init();
+    cout<<"Enter the number"<<endl;
+    cin>>n;
+    cout<<toDecimal(n)<<endl;
+    cout<<increment(n)<<endl;
+    cout<<decrement(n)<<endl;
+    return 0;
+}
+
+
+////////////     SECOND QUESTION  	/////////////
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+void recursiveInsertionSort(int a[], int n, int sE, int pos, int ele)
+{
+    if(sE==n)
+        return;
+
+    if((pos>0)&&(ele<a[pos-1]))
+    {
+        a[pos] = a[pos-1];
+        recursiveInsertionSort(a, n, sE, pos-1, ele);
+    }
+    else
+    {
+        a[pos] = ele;
+        recursiveInsertionSort(a, n, sE+1, sE+1, a[sE+1]);
+    }
+
+    return;
+}
+int main()
+{
+    int a[] = { 6,4,5,546,56,7,945,5,65,-1};
+    int n = sizeof(a)/sizeof(a[0]);
+    recursiveInsertionSort(a, n, 0, 0, a[0]);
+    print(a, n);
+    return 0;
+}
+
+/////////     FIFTH QUESTION	     /////////
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+}
+
+
+void myMerge(int a[],int n, int low, int mid, int high)
+{
+    int b[n];
+    int i=low;
+    int j = mid+1;
+    int k=low;
+    while(i<=mid && j<=high)
+    {
+        if(a[i]<=a[j])
+        {
+            b[k]=a[i];
+            i++;
+        }
+        else
+        {
+            b[k]=a[j];
+            j++;
+        }
+        k++;
+    }
+
+    while(j<=high)
+    {
+        b[k]=a[j];
+        j++;k++;
+    }
+
+    while(i<=mid)
+    {
+        b[k]=a[i];
+        i++; k++;
+    }
+
+    for(i=low; i<=high;i++)
+        a[i]=b[i];
+
+}
+void mergeSort(int a[], int n,int low, int high)
+{
+    if(low==high)
+        return;
+
+    int mid = (low+high)/2;
+    mergeSort(a, n, low, mid);
+    mergeSort(a, n, mid+1, high);
+    myMerge(a, n, low, mid, high);
+    return;
+}
+
+int main()
+{
+    int a[] = { 6,4,5,546,56,7,945,5,65,-1};
+    int n = sizeof(a)/sizeof(a[0]);
+    mergeSort(a,n, 0, n-1);
+    print(a, n);
+    return 0;
+}
+

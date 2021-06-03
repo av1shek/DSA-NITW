@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void countSort(int a[], int n, int div)
+{
+    int freq[10];
+    memset(freq, 0, sizeof(freq));
+
+    for(int i=0;i<n;i++)
+        freq[(a[i]/div)%10]++;
+
+    for(int i=1;i<10;i++)
+        freq[i] =(freq[i] + freq[i-1]);
+
+    int temp[n];
+    for(int i = n - 1; i >= 0; i--)
+    {
+        temp[freq[(a[i]/div)%10]-1]=a[i];
+        freq[(a[i]/div)%10]--;
+    }
+    for(int i=0;i<n;i++)
+        a[i]=temp[i];
+    return;
+}
+
+void radixSort(int a[], int n)
+{
+    int maxx = a[0];
+    for(int i=0;i<n;i++)
+        maxx=max(maxx, a[i]);
+
+    for(int i=1;maxx/i>0;i*=10)
+        countSort(a, n, i);
+}
+
+void print(int a[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+    cout<<endl;
+    return;
+}
+int main()
+{
+    int a[] = {21,   10,  17,  34,  44,  11,  654,  23,  957,  89};
+    int n = sizeof(a)/sizeof(a[0]);
+
+    radixSort(a,n);
+    print(a, n);
+    return 0;
+}
